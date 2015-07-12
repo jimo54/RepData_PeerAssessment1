@@ -13,7 +13,7 @@ head(steps)
 ```
 ## What is mean total number of steps taken per day?
 ### Calculate the total number of steps taken per day
-#### *Note*: Data for the first few days are also displayed
+#### *Note*: Data for the first few days are displayed
 ```{r}
 total_steps_per_day<-setNames(aggregate(steps$steps,na.rm=TRUE,by=list(steps$date),FUN=sum), c('Date', 'TotalSteps'))
 head(total_steps_per_day)
@@ -23,19 +23,19 @@ head(total_steps_per_day)
 hist(total_steps_per_day$TotalSteps,main="Distribution of Total Steps Per Day", xlab="Total Steps per Day")
 ```
 
-### Calculate and report the mean and median of the total number of steps taken per day
+### Calculate and report the mean and median of the total number of steps taken per day.
 ```{r}
 print(mean(total_steps_per_day$TotalSteps))
 print(median(total_steps_per_day$TotalSteps))
 ```
 
 ## What is the average daily activity pattern?
-### Make a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all days (y-axis)
+### Make a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all days (y-axis).
 #### *Note*: First, I calculate and save the average steps per interval across all days into a new variable
 ```{r}
 avg_steps_by_int<-setNames(aggregate(steps$steps,na.rm=TRUE,by=list(steps$interval),FUN=mean), c('interval', 'steps'))
 ```
-#### Now I plot the data
+#### Now I plot the data.
 ```{r}
 plot(avg_steps_by_int$interval,y=avg_steps_by_int$steps,type="l",xlab='Interval',ylab='Average Steps',main='Average Steps Per Interval for All Days')
 ```
@@ -54,10 +54,10 @@ NROW(steps) - NROW(na.omit(steps))
 ```
 
 ### Devise a strategy for filling in all of the missing values in the dataset.
-#### *Note*: My strategy is to replace the NA step values with the mean value for their 5-minute intervals. Using through the avg_steps_by_int data frame created above as a lookup table, it's easy to replace NA values with the average value for the matching 5-minute interval.
+#### *Note*: My strategy is to replace the NA step values with the mean value for their 5-minute intervals. Using the avg_steps_by_int data frame created above as a lookup table, it's easy to replace NA values with the average value for the matching 5-minute intervals.
 
 ### Create a new dataset that is equal to the original dataset but with the missing data filled in.
-#### *Note*: This step is accomplished by looping through the avg_steps_by_int data frame and assigning the average steps value for each interval to NA rows, based on the matching interval values. A new copy of the steps data frame is used here. The first few rows of the new data set are displayed below.
+#### *Note*: This step is accomplished by looping through the avg_steps_by_int data frame and assigning the average steps value for each interval to NA rows in the dataset, based on matching interval values. A new copy of the steps data frame (steps2) is used here. The first few rows of the new data set are displayed below.
 ```{r}
 steps2 <- steps
 for(i in 1:nrow(avg_steps_by_int)) {
@@ -80,7 +80,7 @@ print(median(total_steps_per_day2$TotalSteps))
 
 ## Are there differences in activity patterns between weekdays and weekends?
 ### Create a new factor variable in the dataset with two levels – “weekday” and “weekend” indicating whether a given date is a weekday or weekend day.
-#### *Note*: Using the lubridate library, first convert the dates to Date objects. Then use the ifelse and weekdays functions to add the appropriate levels to a new column. 
+#### *Note*: Using the lubridate library, first convert the dates to Date objects. Then use the ifelse and weekdays functions to add the appropriate levels to a new column. A new copy of the dataset (steps3) is used here.
 ```{r}
 library(lubridate)
 steps3<-steps2
@@ -89,7 +89,7 @@ steps3['daytype']<-ifelse(weekdays(steps3$date,abbreviate=TRUE) %in% c('Sat', 'S
 head(steps3)
 ```
 
-#### Next, calculate and save the average steps per interval by 'weekday' and 'weekend' into a new variable.
+#### Next, calculate and save the average steps per interval by 'weekday' and 'weekend' into a new variable, avg_steps_by_int_daytype.
 ```{r}
 avg_steps_by_int_daytype<-setNames(aggregate(steps3$steps,na.rm=TRUE,by=list(steps3$interval,steps3$daytype),FUN=mean), c('interval','daytype','steps'))
 head(avg_steps_by_int_daytype)
